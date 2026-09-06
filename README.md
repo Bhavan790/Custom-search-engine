@@ -28,7 +28,7 @@ An interactive, dark-themed repository search engine and browser extension desig
 
 | Dark Animated Web UI | Chrome Extension |
 | :---: | :---: |
-| ![Web UI Preview](./assets/web-preview.png) | ![Extension Preview](./assets/extension-popup.png) |
+| ![Web UI Preview](./docs/web-preview.png) | ![Extension Preview](./docs/extension-popup.png) |
 
 
 ---
