@@ -6,21 +6,25 @@
   const form = document.getElementById("search-form");
   const statNumber = document.getElementById("stat-number");
   const miniBars = document.getElementById("mini-bars");
-  const railButtons = Array.from(document.querySelectorAll(".rail-btn"));
-  const railPill = document.getElementById("rail-pill");
-  const railButtonsWrap = document.getElementById("rail-buttons");
-  const hero = document.getElementById("hero");
-
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const railButtons = document.querySelectorAll(".rail-btn");
 
   const LANG_COLORS = {
-    JavaScript: "#f1c40f", TypeScript: "#4f8ef0", Python: "#4fc3a1",
-    Rust: "#e0895f", Go: "#38bdd6", Java: "#c48a3f", "C++": "#e0648f",
-    C: "#9aa0b0", HTML: "#e0704a", CSS: "#9b8bf4", Ruby: "#e0616f",
-    Shell: "#6fbf6f", Jupyter: "#e08a3f",
+    JavaScript: "#f1c40f",
+    TypeScript: "#4f8ef0",
+    Python: "#3fa7a1",
+    Rust: "#e0895f",
+    Go: "#38bdd6",
+    Java: "#c48a3f",
+    "C++": "#e0648f",
+    C: "#8b8f9c",
+    HTML: "#e0704a",
+    CSS: "#8a6fd8",
+    Ruby: "#c0495a",
+    Shell: "#6fbf6f",
+    Jupyter: "#e08a3f",
   };
-  const DEFAULT_LANG_COLOR = "#7a8094";
-  const BAR_PALETTE = ["#9b8bf4", "#4f8ef0", "#4fc3a1", "#e0895f"];
+  const DEFAULT_LANG_COLOR = "#a7abb8";
+  const BAR_PALETTE = ["#6a5bd6", "#4f8ef0", "#3fa7a1", "#e0895f"];
 
   let engine;
   try {
@@ -36,12 +40,8 @@
 
   headline.textContent = isSample ? "Search your GitHub" : `Search ${username}'s GitHub`;
   avatarBadge.textContent = isSample ? "?" : username.charAt(0).toUpperCase();
-
-  animateCountUp(statNumber, docs.length);
+  statNumber.textContent = docs.length;
   renderMiniBars();
-  setupRailPill();
-  setupHeroParallax();
-  setupRotatingPlaceholder();
 
   let activeFilter = "all";
   renderDefaultView();
@@ -52,15 +52,9 @@
       btn.classList.add("active");
       activeFilter = btn.dataset.filter;
       input.value = "";
-      moveRailPillTo(btn);
       renderDefaultView();
     });
   });
-
-  window.addEventListener("resize", debounce(() => {
-    const active = railButtons.find((b) => b.classList.contains("active"));
-    if (active) moveRailPillTo(active, false);
-  }, 150));
 
   form.addEventListener("submit", (e) => e.preventDefault());
   input.addEventListener("input", () => {
@@ -72,7 +66,30 @@
     renderResults(engine.search(query, { limit: 15 }), { mode: "search", query });
   });
 
-  // ---- default browse view (no query typed) ----
+  function renderMiniBars() {
+    const counts = {};
+    for (const d of docs) {
+      const lang = d.language || "Other";
+      counts[lang] = (counts[lang] || 0) + 1;
+    }
+    const top = Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4);
+    const max = top.length ? top[0][1] : 1;
+
+    miniBars.innerHTML = top
+      .map(([lang, count], i) => {
+        const heightPct = Math.max(18, Math.round((count / max) * 100));
+        const color = BAR_PALETTE[i % BAR_PALETTE.length];
+        return `
+          <div class="mini-bar-col">
+            <div class="mini-bar" style="height:${heightPct}%; background:${color};" title="${escapeAttr(lang)}: ${count}"></div>
+            <div class="mini-bar-label">${escapeHtml(lang)}</div>
+          </div>`;
+      })
+      .join("");
+  }
+
   function renderDefaultView() {
     let list = docs.slice();
     if (activeFilter === "starred") {
@@ -99,9 +116,8 @@
     results.innerHTML = hits
       .map((doc, i) => {
         const rank = String(i + 1).padStart(2, "0");
-        const delay = prefersReducedMotion ? 0 : Math.min(i, 8) * 0.05;
         return `
-          <article class="result" style="animation-delay:${delay}s">
+          <article class="result">
             <span class="result-rank">${rank}</span>
             <div class="result-body">
               <h2 class="result-title"><a href="${escapeAttr(doc.url)}" target="_blank" rel="noopener">${escapeHtml(doc.title)}</a></h2>
@@ -119,7 +135,7 @@
     if (doc.language) {
       const color = LANG_COLORS[doc.language] || DEFAULT_LANG_COLOR;
       items.push(
-        `<span class="meta-item" style="color:${color}"><span class="lang-dot" style="background:${color}"></span><span style="color:var(--muted)">${escapeHtml(doc.language)}</span></span>`
+        `<span class="meta-item"><span class="lang-dot" style="background:${color}"></span>${escapeHtml(doc.language)}</span>`
       );
     }
     if (typeof doc.stars === "number") {
@@ -129,121 +145,6 @@
       items.push(`<span class="meta-item">updated ${formatDate(doc.updated)}</span>`);
     }
     return items.join("");
-  }
-
-  // ---- mini language bar chart, grows in on load ----
-  function renderMiniBars() {
-    const counts = {};
-    for (const d of docs) {
-      const lang = d.language || "Other";
-      counts[lang] = (counts[lang] || 0) + 1;
-    }
-    const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 4);
-    const max = top.length ? top[0][1] : 1;
-
-    miniBars.innerHTML = top
-      .map(([lang, count], i) => {
-        const color = BAR_PALETTE[i % BAR_PALETTE.length];
-        return `
-          <div class="mini-bar-col">
-            <div class="mini-bar" data-target="${Math.max(18, Math.round((count / max) * 100))}" style="background:${color}" title="${escapeAttr(lang)}: ${count}"></div>
-            <div class="mini-bar-label">${escapeHtml(lang)}</div>
-          </div>`;
-      })
-      .join("");
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        miniBars.querySelectorAll(".mini-bar").forEach((bar) => {
-          bar.style.height = bar.dataset.target + "%";
-        });
-      });
-    });
-  }
-
-  // ---- animated counter for the repo count ----
-  function animateCountUp(el, target) {
-    if (prefersReducedMotion || target === 0) {
-      el.textContent = target;
-      return;
-    }
-    const duration = 700;
-    const start = performance.now();
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.round(eased * target);
-      if (progress < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-
-  // ---- sliding highlight behind the active rail button ----
-  function setupRailPill() {
-    const active = railButtons.find((b) => b.classList.contains("active"));
-    if (active) moveRailPillTo(active, true);
-  }
-
-  function moveRailPillTo(btn, instant) {
-    const wrapRect = railButtonsWrap.getBoundingClientRect();
-    const btnRect = btn.getBoundingClientRect();
-    const x = btnRect.left - wrapRect.left;
-    const y = btnRect.top - wrapRect.top;
-    if (instant) railPill.style.transition = "none";
-    railPill.style.transform = `translate(${x}px, ${y}px)`;
-    if (instant) {
-      requestAnimationFrame(() => {
-        railPill.style.transition = "";
-      });
-    }
-  }
-
-  // ---- cursor-reactive spotlight on the hero gradient ----
-  function setupHeroParallax() {
-    if (prefersReducedMotion) return;
-    hero.addEventListener("mousemove", (e) => {
-      const rect = hero.getBoundingClientRect();
-      const mx = ((e.clientX - rect.left) / rect.width) * 100;
-      const my = ((e.clientY - rect.top) / rect.height) * 100;
-      hero.style.setProperty("--mx", mx + "%");
-      hero.style.setProperty("--my", my + "%");
-    });
-    hero.addEventListener("mouseleave", () => {
-      hero.style.setProperty("--mx", "50%");
-      hero.style.setProperty("--my", "20%");
-    });
-  }
-
-  // ---- rotating example queries in the placeholder ----
-  function setupRotatingPlaceholder() {
-    if (docs.length === 0) return;
-    const examples = [];
-    for (const d of docs.slice(0, 4)) examples.push(d.title);
-    const languages = [...new Set(docs.map((d) => d.language).filter(Boolean))];
-    for (const l of languages.slice(0, 2)) examples.push(l);
-    if (examples.length === 0) return;
-
-    let i = 0;
-    const base = "a repo name, a topic, a word from a README…";
-    const rotate = () => {
-      if (document.activeElement === input || input.value) return;
-      input.placeholder = `Try "${examples[i % examples.length]}"…`;
-      i++;
-    };
-    if (!prefersReducedMotion) {
-      setInterval(rotate, 2600);
-    }
-    input.addEventListener("blur", () => {
-      if (!input.value) input.placeholder = base;
-    });
-  }
-
-  function debounce(fn, wait) {
-    let t;
-    return (...args) => {
-      clearTimeout(t);
-      t = setTimeout(() => fn(...args), wait);
-    };
   }
 
   function formatDate(iso) {
