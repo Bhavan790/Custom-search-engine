@@ -1,0 +1,212 @@
+:root {
+  --bg: #0a0c11;
+  --card-bg: #14171f;
+  --card-border: #232733;
+  --text: #eef0f4;
+  --muted: #868ea0;
+  --grad-start: #6a5bd6;
+  --grad-mid: #7b64e0;
+  --grad-end: #4f8ef0;
+  --accent: #9b8bf4;
+  --shadow-card: 0 8px 20px -12px rgba(0, 0, 0, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 360px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 13px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--grad-start), var(--grad-mid) 45%, var(--grad-end));
+  background-size: 220% 220%;
+  animation: gradientShift 9s ease-in-out infinite;
+  padding: 1rem 1rem 1.5rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.avatar-badge {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.hero h1 {
+  position: relative;
+  font-size: 0.85rem;
+  font-weight: 650;
+  margin: 0;
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(10, 12, 17, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.5rem 0.75rem;
+  margin: -1rem 0.9rem 0;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.search-bar:focus-within {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.08);
+}
+
+.search-icon {
+  flex-shrink: 0;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.search-bar:focus-within .search-icon {
+  transform: rotate(-12deg) scale(1.08);
+}
+
+#query {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
+#query::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+#subhead {
+  font-size: 10.5px;
+  color: var(--muted);
+  text-align: center;
+  margin: 0.6rem 0 0.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+#results {
+  padding: 0.5rem 0.9rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.result {
+  display: flex;
+  gap: 0.6rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: riseIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes riseIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-rank {
+  color: #555c6e;
+  font-size: 10px;
+  font-weight: 600;
+  padding-top: 0.2rem;
+  width: 1rem;
+  flex-shrink: 0;
+}
+
+.result-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.result-title a {
+  color: var(--text);
+  font-weight: 650;
+  font-size: 12.5px;
+  text-decoration: none;
+}
+
+.result-title a:hover,
+.result-title a:focus-visible {
+  color: var(--accent);
+}
+
+.result-description {
+  margin: 0.2rem 0 0.35rem;
+  font-size: 11px;
+  color: #b7bccb;
+}
+
+.result-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.result-meta .meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.lang-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 5px 0 currentColor;
+}
+
+.hint-state,
+.empty-state {
+  padding: 0.9rem 0.75rem;
+  color: var(--muted);
+  font-size: 11.5px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  margin: 0 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero { animation: none; }
+  .result { animation: none; opacity: 1; transform: none; }
+}

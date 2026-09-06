@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "My Repo Search",
+  "version": "1.0.0",
+  "description": "Search your own GitHub repos with a search engine you built yourself (BM25, no external API).",
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repo Search</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="blob blob-a" aria-hidden="true"></div>
+  <div class="blob blob-b" aria-hidden="true"></div>
+
+  <div class="sparks" aria-hidden="true">
+    <span class="spark" style="left:8%; animation-delay:0s; animation-duration:7s;"></span>
+    <span class="spark" style="left:22%; animation-delay:1.4s; animation-duration:9s;"></span>
+    <span class="spark" style="left:38%; animation-delay:2.8s; animation-duration:6.5s;"></span>
+    <span class="spark" style="left:55%; animation-delay:0.7s; animation-duration:8s;"></span>
+    <span class="spark" style="left:71%; animation-delay:3.6s; animation-duration:7.5s;"></span>
+    <span class="spark" style="left:86%; animation-delay:2s; animation-duration:9.5s;"></span>
+  </div>
+
+  <div class="page">
+    <div class="layout">
+      <nav class="icon-rail" aria-label="Sort filters">
+        <div class="rail-avatar" id="avatar-badge">?</div>
+        <div class="rail-divider"></div>
+        <div class="rail-buttons" id="rail-buttons">
+          <div class="rail-pill" id="rail-pill" aria-hidden="true"></div>
+          <button class="rail-btn active" data-filter="all" title="All repos" aria-label="All repos">
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+          </button>
+          <button class="rail-btn" data-filter="starred" title="Most starred" aria-label="Most starred">
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M10 2.5l2.35 4.76 5.25.76-3.8 3.7.9 5.23L10 14.5l-4.7 2.45.9-5.23-3.8-3.7 5.25-.76L10 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="rail-btn" data-filter="recent" title="Recently updated" aria-label="Recently updated">
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.6"/><path d="M10 6v4.2l3 1.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+          <button class="rail-btn" data-filter="shuffle" title="Surprise me" aria-label="Surprise me">
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M2.5 5h3l7 10h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 15h3l2.2-3.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2.5l3.5 2.5-3.5 2.5M14 12.5l3.5 2.5-3.5 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </nav>
+
+      <div class="main">
+        <div class="hero" id="hero">
+          <div class="hero-content">
+            <h1 id="headline">Search your GitHub</h1>
+            <form id="search-form" autocomplete="off">
+              <label class="search-bar" for="query">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="5.25" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+                <input id="query" name="query" type="text" placeholder="a repo name, a topic, a word from a README…" autofocus />
+              </label>
+            </form>
+          </div>
+
+          <div class="hero-illustration" aria-hidden="true">
+            <svg viewBox="0 0 220 240" width="150" height="164">
+              <path d="M4 190 C 40 160, 60 120, 78 96" stroke="rgba(255,255,255,0.35)" stroke-width="2" fill="none" stroke-dasharray="4 6"/>
+              <g class="twinkle-star" style="animation-delay:0s">
+                <path d="M40 30 L43 38 L51 40 L43 42 L40 50 L37 42 L29 40 L37 38 Z" fill="#ffe98a"/>
+              </g>
+              <g class="twinkle-star" style="animation-delay:0.8s">
+                <path d="M188 60 L190 66 L196 68 L190 70 L188 76 L186 70 L180 68 L186 66 Z" fill="#ffe98a"/>
+              </g>
+              <g class="twinkle-star" style="animation-delay:1.6s">
+                <path d="M170 150 L172 155 L177 157 L172 159 L170 164 L168 159 L163 157 L168 155 Z" fill="#ffe98a"/>
+              </g>
+              <g class="float-folder" style="animation-delay:0.3s">
+                <rect x="150" y="30" width="26" height="19" rx="3" fill="#ffd166"/>
+                <path d="M150 33 v-3 a3 3 0 0 1 3-3 h7 l4 4" fill="none" stroke="#ffd166" stroke-width="2" stroke-linejoin="round"/>
+              </g>
+              <g class="float-folder" style="animation-delay:1.1s">
+                <rect x="14" y="120" width="24" height="17" rx="3" fill="#9fe3d8"/>
+                <path d="M14 123 v-3 a3 3 0 0 1 3-3 h6 l4 4" fill="none" stroke="#9fe3d8" stroke-width="2" stroke-linejoin="round"/>
+              </g>
+
+              <ellipse cx="112" cy="222" rx="34" ry="8" fill="rgba(0,0,0,0.18)"/>
+
+              <g class="astronaut-float">
+                <rect x="94" y="130" width="14" height="34" rx="7" fill="#e7e9f5" transform="rotate(-8 101 147)"/>
+                <rect x="118" y="130" width="14" height="34" rx="7" fill="#e7e9f5" transform="rotate(10 125 147)"/>
+                <rect x="72" y="96" width="76" height="78" rx="34" fill="#ffffff"/>
+                <rect x="82" y="70" width="18" height="34" rx="9" fill="#ffffff" transform="rotate(-25 91 87)"/>
+                <circle cx="76" cy="70" r="9" fill="#ffffff"/>
+                <rect x="122" y="118" width="34" height="24" rx="5" fill="#dfe2f2"/>
+                <rect x="126" y="112" width="26" height="10" rx="3" fill="#b9bee0"/>
+                <circle cx="139" cy="127" r="6" fill="none" stroke="#6a5bd6" stroke-width="2"/>
+                <line x1="143" y1="131" x2="148" y2="136" stroke="#6a5bd6" stroke-width="2" stroke-linecap="round"/>
+                <rect x="98" y="118" width="24" height="16" rx="4" fill="#eef0fb"/>
+                <circle cx="103" cy="130" r="2.5" fill="#9b8bf4"/>
+                <circle cx="112" cy="130" r="2.5" fill="#4f8ef0"/>
+                <circle cx="121" cy="130" r="2.5" fill="#4fc3a1"/>
+                <circle cx="110" cy="66" r="40" fill="#ffffff"/>
+                <ellipse cx="110" cy="68" rx="27" ry="24" fill="url(#visorGradient)"/>
+                <ellipse cx="100" cy="58" rx="7" ry="5" fill="rgba(255,255,255,0.55)"/>
+              </g>
+
+              <defs>
+                <linearGradient id="visorGradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#9b8bf4"/>
+                  <stop offset="100%" stop-color="#4f8ef0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-number-wrap">
+            <div class="stat-number" id="stat-number">0</div>
+            <div class="stat-label">repos indexed</div>
+          </div>
+          <div class="mini-bars" id="mini-bars"></div>
+        </div>
+
+        <section id="results" aria-live="polite"></section>
+
+        <p class="page-footer">
+          Ranked with a hand-rolled BM25 index — no external search API involved.
+          Point this at different repos with <code>node indexer/build-index.js YOUR_USERNAME</code>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="search-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
