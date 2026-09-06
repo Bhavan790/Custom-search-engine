@@ -89,5 +89,3 @@ To run the web app locally on your machine:
 
 ---
 
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
